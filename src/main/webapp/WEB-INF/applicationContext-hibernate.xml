@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
+       >
+ 
+	<bean id="spicyDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+ 		<property name="driverClass" value="${spicy.jdbc.driverClass}" />
+		<property name="jdbcUrl" value="${spicy.jdbc.url}" />
+        <!-- user/password overriden by env.properties -->
+		<property name="user" value="${env.spicy.jdbc.user}" />                          
+        <property name="password" value="${env.spicy.jdbc.password}"/>                  	
+		<property name="testConnectionOnCheckout" value="true"/>
+	</bean>
+
+
+	<!-- Enable @Repository // from org.springframework.stereotype -->
+    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+     
+
+	<bean id="spicySessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="spicyDataSource"/>
+		<property name="mappingResources">
+			<list>
+				<value>com/spicy/domain/Type.hbm.xml</value>
+				<value>com/spicy/domain/Revenuetransaction.hbm.xml</value>
+				<value>com/spicy/domain/City.hbm.xml</value>
+				<value>com/spicy/domain/Country.hbm.xml</value>
+				<value>com/spicy/domain/Source.hbm.xml</value>
+				<value>com/spicy/domain/Region.hbm.xml</value>
+				<value>com/spicy/domain/Company.hbm.xml</value>
+				<value>com/spicy/domain/Person.hbm.xml</value>
+				<value>com/spicy/domain/Category.hbm.xml</value>
+				<value>com/spicy/domain/Body.hbm.xml</value>
+				<value>com/spicy/domain/Transaction.hbm.xml</value>
+				<value>com/spicy/domain/Attributevalue.hbm.xml</value>
+				<value>com/spicy/domain/Status.hbm.xml</value>
+				<value>com/spicy/domain/Attribute.hbm.xml</value>
+				<value>com/spicy/domain/Groupmembers.hbm.xml</value>
+				<value>com/spicy/domain/Users.hbm.xml</value>
+				<value>com/spicy/domain/Postcode.hbm.xml</value>
+				<value>com/spicy/domain/Address.hbm.xml</value>
+				<value>com/spicy/domain/Telephone.hbm.xml</value>
+				<value>com/spicy/domain/Location.hbm.xml</value>
+				<value>com/spicy/domain/Item.hbm.xml</value>
+				<value>com/spicy/domain/Currency.hbm.xml</value>
+				<value>com/spicy/domain/Email.hbm.xml</value>
+				<value>com/spicy/domain/Groups.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>			
+			
+				<prop key="hibernate.dialect">${spicy.db.dialect}</prop>
+				<prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.format_sql">false</prop>
+                <!-- <prop key="hibernate.use_sql_comments">true</prop> -->
+				<prop key="hibernate.bytecode.use_reflection_optimizer">true</prop>
+				<prop key="hibernate.jdbc.batch_size">20</prop>
+				
+				
+				<prop key="hibernate.c3p0.min_size">10</prop>
+				<prop key="hibernate.c3p0.max_size">100</prop>
+				<prop key="hibernate.c3p0.timeout">10</prop>
+				<prop key="hibernate.c3p0.acquireRetryAttempts">30</prop>
+
+				<prop key="hibernate.c3p0.acquireIncrement">5</prop>
+
+				<prop key="hibernate.c3p0.idleConnectionTestPeriod">100</prop>
+
+				<prop key="hibernate.c3p0.initialPoolSize">20</prop>
+				<prop key="hibernate.c3p0.maxPoolSize">100</prop>
+				<prop key="hibernate.c3p0.maxIdleTime">300</prop>
+				<prop key="hibernate.c3p0.maxStatements">50</prop>
+				<prop key="hibernate.c3p0.minPoolSize">10</prop>
+
+				<prop key="hibernate.c3p0.preferredTestQuery">SELECT 1</prop>			
+				
+				
+				<prop key="hibernate.c3p0.testConnectionOnCheckout">true</prop>
+               
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="spicyUsersDAO" class="com.spicy.domain.UsersDAO">     
+		<property name="sessionFactory" ref="spicySessionFactory" />	
+	</bean>
+	
+	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="spicySessionFactory" />
+	</bean>
+
+    <tx:annotation-driven transaction-manager="txManager" />
+
+</beans>
