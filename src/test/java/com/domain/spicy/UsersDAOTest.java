@@ -1,7 +1,7 @@
 package com.domain.spicy;
 
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
@@ -20,7 +20,8 @@ import com.spicy.domain.UsersDAO;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/applicationContext-hibernate.xml"})
+//@ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/applicationContext-hibernate.xml"})
+@ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/applicationContext-hibernate.xml", "file:src/main/webapp/WEB-INF/applicationContext.xml"})
 //@ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/applicationContext-acegi-security.xml", "file:src/main/webapp/WEB-INF/applicationContext-hibernate.xml", "file:src/main/webapp/WEB-INF/applicationContext.xml"})
 @TransactionConfiguration(transactionManager="txManager", defaultRollback=false)
 @Transactional
@@ -48,7 +49,7 @@ public class UsersDAOTest {
         usersDAO.save(u);
         
         List<Users> list = usersDAO.findAll();
-        assertEquals(0, list.size());
+        assertTrue(list.size() > 0);
     }
 //    public void testGetUserByUsername() {
 //        String USER = "test";
